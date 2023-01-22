@@ -1,0 +1,29 @@
+version: '3.3'
+services:
+  postgres_db:
+    image: postgres:14.2-alpine
+    environment:
+      - POSTGRES_PASSWORD=AdminPassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=tech_in_depth
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - app
+    ports:
+      - "5432:5432"
+    deploy:
+      endpoint_mode: vip, dnsrr
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+networks:
+  app:
+    external:
+      name: ext-app-network
+volumes:
+  dbdata:
+    external: true

@@ -1,0 +1,30 @@
+tech:
+  collections:
+    users: users
+    roles: roles
+    groups: groups
+    permissions: permissions
+
+jwt:
+  secret: 268d2e9e-7eba-4e4f-a8b0-3e8e6853f3a1
+  expirationDateInMs: 18000000
+
+server:
+  port: 8080
+  servlet:
+    context-path: /tech/
+logging:
+  level:
+    web: debug
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/tech_in_depth
+    username: postgres
+    password: AdminPassword
+  sql:
+    init:
+      mode: always
+  jpa:
+    database: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
