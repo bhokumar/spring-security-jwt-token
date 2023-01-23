@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
@@ -29,12 +30,8 @@ public class JwtUtils {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
-        if (roles.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            claims.put("isAdmin", true);
-        }
-        if (roles.contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-            claims.put("isUser", true);
-        }
+        List<String> permissions = roles.stream().map(role -> role.getAuthority()).collect(Collectors.toList());
+        claims.put("permissions", permissions);
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
@@ -64,15 +61,9 @@ public class JwtUtils {
     }
 
     public List<SimpleGrantedAuthority> getRolesFromToken(String authToken) {
-        List<SimpleGrantedAuthority> roles = new ArrayList<>();
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken).getBody();
-        String subject = claims.get("sub", String.class);
-        if ("user".equals(subject)) {
-            roles.add(new SimpleGrantedAuthority("VIEW_USER"));
-        }
-        if ("admin".equals(subject)) {
-            roles.add(new SimpleGrantedAuthority("VIEW_ADMIN"));
-        }
+        List<String> permissions = claims.get("permissions", List.class);
+        List<SimpleGrantedAuthority> roles = permissions.stream().map(permission -> new SimpleGrantedAuthority(permission)).collect(Collectors.toList());
         return roles;
     }
 }
