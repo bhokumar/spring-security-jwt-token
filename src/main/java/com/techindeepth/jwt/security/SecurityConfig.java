@@ -4,6 +4,7 @@ import com.techindeepth.jwt.filters.CustomJwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,7 +30,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.httpBasic();
+
         return httpSecurity.csrf().disable()
                 // dont authenticate this particular request
                 .authorizeHttpRequests().requestMatchers("/authenticate").permitAll().
@@ -40,8 +41,8 @@ public class SecurityConfig {
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
+                .httpBasic(Customizer.withDefaults()).build();
                 // Add a filter to validate the tokens with every request
-                .addFilterBefore(customJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 
 

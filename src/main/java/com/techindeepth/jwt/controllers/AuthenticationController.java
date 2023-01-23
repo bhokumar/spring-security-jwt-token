@@ -1,7 +1,6 @@
 package com.techindeepth.jwt.controllers;
 
 import com.techindeepth.jwt.models.AuthenticationResponse;
-import com.techindeepth.jwt.services.CustomUserDetailsService;
 import com.techindeepth.jwt.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,8 @@ import com.techindeepth.jwt.models.AuthenticationRequest;
 
 @RestController
 public class AuthenticationController {
+
+
 
     AuthenticationManager authenticationManager;
 
